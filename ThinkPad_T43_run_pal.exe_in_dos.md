@@ -16,24 +16,27 @@ config.sys
 menuitem=px3,Planet X3
 menuitem=ems,DOS with EMS
 menuitem=xms,DOS with XMS
+menuitem=sbemu,DOS with SBEMU
 menuitem=oldxms,DOS with limit XMS/EMS
 menuitem=cdrom,DOS with EMS and CDROM
 menuitem=xdrom,DOS with XMS and CDROM
 
 menucolor=14,1
-menudefault=oldxms,5
+menudefault=ems,5
 [common]
-
+shell=c:\command.com /p /e:4096
+device=c:\dos\setver.exe 
 rem device=c:\windows\ramdrive.sys /e 10240
 dos=high,umb
-stackshigh=8,128
-files=20
+stackshigh=9,256
+files=40
 [ems]
 device=c:\windows\himem.sys
 device=c:\windows\emm386.exe I=C400-D800
 [xms]
 device=c:\windows\himem.sys
-
+[sbemu]
+device=c:\sbemu\JEMMEX.EXE
 [oldxms]
 device=c:\dos\himem.sys /testmem:off
 devicehigh=c:\dos\emm386.exe
@@ -52,6 +55,7 @@ devicehigh=c:\tools\oakcdrom.sys /d:zhblue
 device=c:\windows\himem.sys
 devicehigh=c:\tools\oakcdrom.sys /d:zhblue
 
+
 ```
 * the I=C400-D800 help EMM386.exe to make EMS available on Thinkpad T4x for the default C0000 is used by some ROM 
 
@@ -62,8 +66,17 @@ autoexec.bat
 
 path C:\WINDOWS;C:\WINDOWS\COMMAND;c:\tools;c:\dos
 set BLASTER=A220 I7 D1 P330 T6
-lh adlipt blaster
+
 goto %config%
+lh adlipt blaster
+
+:sbemu
+cd sbemu
+hdpmi32i
+jload qpiemu.dll
+sbemu
+cd \
+
 :px3
 
 cd game\planetx3
